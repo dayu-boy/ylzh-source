@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>银龄智护｜AI助老数字科普服务平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background-color: #fff7f0; /* 页面最外层浅橙底色 */
+            color: #333;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        /* 外层白色大圆角卡片，全部内容装在这里面 */
+        .page-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 22px rgba(255,120,36,0.08);
+        }
+
+        /* 顶部橙色标题块 */
+        .page-header {
+            background: linear-gradient(135deg, #ff7824, #ff943b);
+            border-radius: 16px;
+            padding: 45px 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(255, 120, 36, 0.3);
+        }
+
+        .page-header h1 {
+            color: #ffffff;
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .meta-info p {
+            color: #222222;
+            font-size: 18px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        /* 轮播容器 */
+        .slider-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #fff8ec;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .slider-item {
+            display: none;
+        }
+
+        .slider-item.active {
+            display: block;
+        }
+
+        .slider-inner {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .slider-photo {
+            width: 50%;
+        }
+
+        .slider-photo img {
+            width: 100%;
+            height: 260px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #f8f4ec;
+        }
+
+        .slider-info {
+            width: 50%;
+        }
+
+        .slider-info h3 {
+            font-size: 30px;
+            color: #ff7824;
+            border-left: 6px solid #ff7824;
+            padding-left: 14px;
+            margin-bottom: 18px;
+        }
+
+        .slider-info p {
+            font-size: 18px;
+            color: #444;
+            line-height: 1.8;
+            margin: 10px 0;
+        }
+
+        /* 左右切换按钮 */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: #ff8822;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .slider-btn:hover {
+            background: #ff6b1a;
+        }
+
+        .prev-btn {
+            left: 16px;
+        }
+
+        .next-btn {
+            right: 16px;
+        }
+
+        /* 底部圆点 */
+        .slider-dots {
+            position: relative;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: #ff7824;
+        }
+
+        /* ========== 目录导航 截图样式 ========== */
+        main h2 {
+            font-size: 28px;
+            color: #ff7824;
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 6px solid #4078e8;
+            background-color: #fff3e6;
+            padding:10px 14px;
+            border-radius:0 8px 8px 0;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap:16px;
+        }
+
+        .nav-list li a {
+            display:block;
+            padding:20px 24px;
+            background:#f0f5ff;
+            color:#233963;
+            text-decoration:none;
+            border-radius:12px;
+            font-size:20px;
+            font-weight:500;
+            position:relative;
+            transition:0.3s;
+        }
+        /* 默认左侧蓝色竖线 */
+        .nav-list li a::before{
+            content:"";
+            position:absolute;
+            left:0;
+            top:0;
+            width:6px;
+            height:100%;
+            background:#4078e8;
+            border-top-left-radius:12px;
+            border-bottom-left-radius:12px;
+        }
+
+        /* hover激活状态：橙色样式 */
+        .nav-list li a:hover{
+            background:#fff3e6;
+            color:#ff7824;
+        }
+        .nav-list li a:hover::before{
+            background:#ff7824;
+        }
+
+        /* 返回顶部按钮 */
+        #backTop {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            padding: 12px 20px;
+            background: #ff8838;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: none;
+            z-index: 999;
+            font-size: 15px;
+            box-shadow: 0 3px 12px rgba(255, 136, 56, 0.45);
+            transition: 0.3s;
+        }
+
+        #backTop:hover {
+            background: #ff6b1a;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            body{
+                padding:20px 10px;
+            }
+            .page-wrap{
+                padding:20px;
+            }
+            .page-header {
+                padding: 28px 20px;
+            }
+            .page-header h1 {
+                font-size: 26px;
+            }
+            .meta-info p {
+                font-size: 16px;
+            }
+            .slider-inner {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .slider-photo,
+            .slider-info {
+                width: 100%;
+            }
+            .slider-photo img {
+                height: 200px;
+            }
+            .slider-info h3 {
+                font-size: 22px;
+            }
+            .slider-info p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrap"> <!-- 外层白色圆角卡片 -->
+    <!-- 顶部橙色标题块 -->
+    <header class="page-header">
+        <h1>银龄智护——AI助老数字科普服务平台</h1>
+        <div class="meta-info">
+            <p>赛道类别：新文科・银发经济、养老服务</p>
+            <p>参赛组别：本科生创意组（未进行工商注册，拥有完整产品原型方案）</p>
+        </div>
+    </header>
+
+    <!-- 轮播模块：左图右文，4张 -->
+    <div class="slider-wrap">
+        <div class="slider-item active">
+            <div class="slider-inner">
+                <div class="slider-photo">
+                    <img src="images/one.jpg" alt="银龄智护">
+                </div>
+                <div class="slider-info">
+                    <h3>银龄智护‑AI助老平台</h3>
+                    <p>面向老年群体的数字服务平台，助力老年人轻松使用智能手机，解决数字生活难题。</p>
+                    <p>适用场景：社区科普课堂、居家老人自学、养老机构教学、老年反诈宣传。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-item">
+            <div class="slider-inner">
+                <div class="slider-photo">
+                    <img src="images/two.jpeg" alt="银龄智护使用场景">
+                </div>
+                <div class="slider-info">
+                    <h3>平台服务内容</h3>
+                    <p>手机基础操作教学、线上挂号、生活缴费、健康监测提醒、紧急求助、反诈科普。</p>
+                    <p>通过图文、短视频、语音引导，降低老年人学习门槛。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-item">
+            <div class="slider-inner">
+                <div class="slider-photo">
+                    <img src="images/three.jpg" alt="银龄智护价值">
+                </div>
+                <div class="slider-info">
+                    <h3>项目价值</h3>
+                    <p>跨越数字鸿沟，让老年人也能享受数字化带来的便利，守护老人财产与健康安全。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-item">
+            <div class="slider-inner">
+                <div class="slider-photo">
+                    <img src="images/four.jpg" alt="银龄智护科普实践">
+                </div>
+                <div class="slider-info">
+                    <h3>线下科普实践</h3>
+                    <p>走进社区开展公益教学，手把手帮助老年人掌握智能设备，提升防诈骗意识。</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="slider-btn prev-btn">&lt;</button>
+        <button class="slider-btn next-btn">&gt;</button>
+
+        <div class="slider-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+
+    <!-- 目录导航 -->
+    <main>
+        <h2>📋 目录导航</h2>
+        <ul class="nav-list">
+            <li><a href="chapter1.html">第一章 执行总结</a></li>
+            <li><a href="chapter2.html">第二章 项目或公司简介</a></li>
+            <li><a href="chapter3.html">第三章 市场与竞争分析</a></li>
+            <li><a href="chapter4.html">第四章 运营分析</a></li>
+            <li><a href="chapter5.html">第五章 财务分析</a></li>
+            <li><a href="chapter6.html">第六章 风险分析</a></li>
+            <li><a href="chapter7.html">第七章 团队简介</a></li>
+          
+        </ul>
+    </main>
+</div>
+
+<!-- 返回顶部按钮 -->
+<button id="backTop">返回顶部</button>
+
+<script>
+    // ========== 轮播逻辑 ==========
+    const items = document.querySelectorAll('.slider-item');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let index = 0;
+
+    function changeSlide(i) {
+        items[index].classList.remove('active');
+        dots[index].classList.remove('active');
+        index = i;
+        items[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+    function next() {
+        let newIdx = (index + 1) % items.length;
+        changeSlide(newIdx);
+    }
+
+    function prev() {
+        let newIdx = (index - 1 + items.length) % items.length;
+        changeSlide(newIdx);
+    }
+
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => changeSlide(i));
+    });
+
+    // 自动轮播，4秒切换
+    let timer = setInterval(next, 4000);
+
+    // 鼠标悬浮暂停
+    document.querySelector('.slider-wrap').addEventListener('mouseenter', () => clearInterval(timer));
+    document.querySelector('.slider-wrap').addEventListener('mouseleave', () => {
+        timer = setInterval(next, 4000);
+    });
+
+    // ========== 返回顶部 ==========
+    const backTopBtn = document.getElementById('backTop');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backTopBtn.style.display = 'block';
+        } else {
+            backTopBtn.style.display = 'none';
+        }
+    });
+
+    backTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
